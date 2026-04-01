@@ -21,5 +21,6 @@ def upload_to_cloudinary(local_path: str, public_id: str) -> str:
         type='upload',
         access_mode='public',
         overwrite=True,
+        invalidate=True,
     )
     return result['secure_url']
