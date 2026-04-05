@@ -1,4 +1,5 @@
 # Deck views: list all decks, upload + trigger async analysis pipeline, retrieve detail, email questions.
+# CommentListView and CommentDeleteView handle per-deck comments.
 
 import os
 import threading
@@ -9,8 +10,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.parsers import MultiPartParser
 
-from .models import Deck
-from .serializers import DeckListSerializer, DeckDetailSerializer
+from .models import Deck, Comment
+from .serializers import DeckListSerializer, DeckDetailSerializer, CommentSerializer
 from apps.setup.models import FirmPreferences
 from services.conversion_service import convert_to_pdf
 from services.storage_service import upload_to_cloudinary
@@ -131,3 +132,39 @@ class DeckEmailView(APIView):
             return Response({'error': f'Email failed: {e}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         return Response({'message': 'Email sent successfully.'})
+
+
+class CommentListView(APIView):
+    def get(self, request, pk):
+        """List all comments for a deck."""
+        try:
+            deck = Deck.objects.get(id=pk)
+        except Deck.DoesNotExist:
+            return Response({'error': 'Deck not found.'}, status=status.HTTP_404_NOT_FOUND)
+        comments = deck.comments.all()
+        return Response(CommentSerializer(comments, many=True).data)
+
+    def post(self, request, pk):
+        """Add a new comment to a deck."""
+        try:
+            deck = Deck.objects.get(id=pk)
+        except Deck.DoesNotExist:
+            return Response({'error': 'Deck not found.'}, status=status.HTTP_404_NOT_FOUND)
+        serializer = CommentSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        serializer.save(deck=deck, author=request.user)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class CommentDeleteView(APIView):
+    def delete(self, request, pk, comment_id):
+        """Delete a comment — only the author can delete their own comment."""
+        try:
+            comment = Comment.objects.get(id=comment_id, deck_id=pk)
+        except Comment.DoesNotExist:
+            return Response({'error': 'Comment not found.'}, status=status.HTTP_404_NOT_FOUND)
+        if comment.author != request.user:
+            return Response({'error': 'Not allowed.'}, status=status.HTTP_403_FORBIDDEN)
+        comment.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

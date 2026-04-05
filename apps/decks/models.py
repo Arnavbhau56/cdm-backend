@@ -1,4 +1,5 @@
 # Deck model: stores pitch deck metadata, Cloudinary PDF URL, OpenAI reference, and all 4 AI-generated analysis fields.
+# Comment model: stores user notes attached to a deck.
 
 import uuid
 from django.db import models
@@ -33,3 +34,17 @@ class Deck(models.Model):
 
     def __str__(self):
         return self.startup_name
+
+
+class Comment(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    deck = models.ForeignKey(Deck, on_delete=models.CASCADE, related_name='comments')
+    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    body = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['created_at']
+
+    def __str__(self):
+        return f'{self.author} on {self.deck}'
