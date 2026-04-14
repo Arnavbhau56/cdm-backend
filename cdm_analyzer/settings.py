@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
+    'import_export',
     'apps.auth_app',
     'apps.decks',
     'apps.setup',

@@ -8,3 +8,4 @@ openai
 python-dotenv
 gunicorn
 dj-database-url
+django-import-export

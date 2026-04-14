@@ -1,5 +1,5 @@
 # OpenAI service: uploads PDF to Files API, calls gpt-4o with structured VC analysis prompt,
-# and returns parsed JSON with business_model, industry_context, key_risks, founder_questions.
+# returns parsed JSON with startup_name, sector, business_model, industry_context, key_risks, founder_questions.
 
 import json
 import os
@@ -19,11 +19,17 @@ A startup pitch deck has been attached as a file. Your job is NOT to summarize t
 Your job is to help our investment team deeply understand this business and walk into
 the first founder call fully prepared — even if they have never seen this sector before.
 
-Return ONLY a valid JSON object with exactly these 4 keys. No markdown. No explanation outside the JSON."""
+Return ONLY a valid JSON object with exactly these 7 keys. No markdown. No explanation outside the JSON."""
 
 USER_PROMPT = """Analyze the attached pitch deck and return this exact JSON structure:
 
 {
+  "startup_name": "The exact name of the startup as it appears in the deck.",
+
+  "sector": "2-3 relevant sector labels, comma-separated (e.g. Fintech, SaaS or Healthtech, B2B, Deeptech).",
+
+  "founder_email": "Email address of the founder or company contact if present in the deck. If not found, return empty string.",
+
   "business_model": "A clear, jargon-free explanation of what this company does, who their customer is, how they make money, and why a customer would choose them over alternatives. Write as if explaining to a smart generalist who knows nothing about this sector.",
 
   "industry_context": "Explain how this type of business typically works — the category dynamics, what drives success in it, how companies in this space typically grow, and any relevant VC-backed precedents or comparable companies.",

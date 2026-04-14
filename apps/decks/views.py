@@ -1,5 +1,4 @@
-# Deck views: list all decks, upload + trigger async analysis pipeline, retrieve detail, email questions.
-# CommentListView and CommentDeleteView handle per-deck comments.
+# Deck views: upload pipeline, list with filtering, detail, email, CRM status update, and comments.
 
 import os
 import threading
@@ -11,7 +10,7 @@ from rest_framework import status
 from rest_framework.parsers import MultiPartParser
 
 from .models import Deck, Comment
-from .serializers import DeckListSerializer, DeckDetailSerializer, CommentSerializer
+from .serializers import DeckListSerializer, DeckDetailSerializer, CommentSerializer, FounderContactSerializer
 from apps.setup.models import FirmPreferences
 from services.conversion_service import convert_to_pdf
 from services.storage_service import upload_to_cloudinary
@@ -20,20 +19,18 @@ from services.email_service import send_founder_questions
 
 
 def _run_analysis(deck_id: str, pdf_path: str):
-    """Background thread: runs OpenAI analysis, uploads to Cloudinary, saves results. Cleans up temp file at the end."""
+    """Background thread: runs OpenAI analysis, uploads to Cloudinary, saves results."""
     from .models import Deck
     deck = Deck.objects.get(id=deck_id)
     try:
-        # Get firm preferences
         prefs = FirmPreferences.objects.first()
-
-        # Analyze with OpenAI (reads the local file)
         result = analyze_deck(pdf_path, prefs)
-
-        # Upload to Cloudinary (file still exists)
-        pdf_url = upload_to_cloudinary(pdf_path, f"decks/{deck_id}")
+        pdf_url = upload_to_cloudinary(pdf_path, f'decks/{deck_id}')
 
         deck.pdf_url = pdf_url
+        deck.startup_name = result.get('startup_name') or deck.startup_name
+        deck.sector = result.get('sector', '')
+        deck.founder_email = result.get('founder_email', '')
         deck.business_model = result['business_model']
         deck.industry_context = result['industry_context']
         deck.key_risks = result['key_risks']
@@ -54,8 +51,14 @@ def _run_analysis(deck_id: str, pdf_path: str):
 
 class DeckListView(APIView):
     def get(self, request):
-        decks = Deck.objects.all()
-        return Response(DeckListSerializer(decks, many=True).data)
+        qs = Deck.objects.all()
+        sector = request.query_params.get('sector')
+        crm_status = request.query_params.get('crm_status')
+        if sector:
+            qs = qs.filter(sector__icontains=sector)
+        if crm_status:
+            qs = qs.filter(crm_status=crm_status)
+        return Response(DeckListSerializer(qs, many=True).data)
 
 
 class DeckUploadView(APIView):
@@ -72,7 +75,6 @@ class DeckUploadView(APIView):
 
         startup_name = Path(file.name).stem.replace('_', ' ').replace('-', ' ').title()
 
-        # Save uploaded file temporarily
         tmp_dir = Path('/tmp') if os.name != 'nt' else Path(os.environ.get('TEMP', 'C:/Temp'))
         tmp_dir.mkdir(exist_ok=True)
         tmp_path = tmp_dir / file.name
@@ -80,7 +82,6 @@ class DeckUploadView(APIView):
             for chunk in file.chunks():
                 f.write(chunk)
 
-        # Convert PPT/PPTX to PDF if needed
         if ext in ['.ppt', '.pptx']:
             try:
                 pdf_path = convert_to_pdf(str(tmp_path))
@@ -97,9 +98,7 @@ class DeckUploadView(APIView):
             uploaded_by=request.user,
         )
 
-        thread = threading.Thread(target=_run_analysis, args=(str(deck.id), pdf_path), daemon=True)
-        thread.start()
-
+        threading.Thread(target=_run_analysis, args=(str(deck.id), pdf_path), daemon=True).start()
         return Response({'id': str(deck.id), 'status': 'processing'}, status=status.HTTP_202_ACCEPTED)
 
 
@@ -110,6 +109,41 @@ class DeckDetailView(APIView):
         except Deck.DoesNotExist:
             return Response({'error': 'Deck not found.'}, status=status.HTTP_404_NOT_FOUND)
         return Response(DeckDetailSerializer(deck).data)
+
+    def delete(self, request, pk):
+        try:
+            deck = Deck.objects.get(id=pk)
+        except Deck.DoesNotExist:
+            return Response({'error': 'Deck not found.'}, status=status.HTTP_404_NOT_FOUND)
+        deck.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class DeckBulkDeleteView(APIView):
+    def post(self, request):
+        ids = request.data.get('ids', [])
+        if not ids:
+            return Response({'error': 'No ids provided.'}, status=status.HTTP_400_BAD_REQUEST)
+        deleted, _ = Deck.objects.filter(id__in=ids).delete()
+        return Response({'deleted': deleted})
+
+
+class DeckCrmStatusView(APIView):
+    def patch(self, request, pk):
+        """Update only the CRM status (Pending / Approved / Rejected)."""
+        try:
+            deck = Deck.objects.get(id=pk)
+        except Deck.DoesNotExist:
+            return Response({'error': 'Deck not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        new_status = request.data.get('crm_status', '').lower()
+        valid = [c[0] for c in Deck.CRM_STATUS]
+        if new_status not in valid:
+            return Response({'error': f'crm_status must be one of {valid}.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        deck.crm_status = new_status
+        deck.save(update_fields=['crm_status'])
+        return Response({'crm_status': deck.crm_status})
 
 
 class DeckEmailView(APIView):
@@ -122,30 +156,57 @@ class DeckEmailView(APIView):
         recipient = request.data.get('recipient_email', '').strip()
         if not recipient:
             return Response({'error': 'recipient_email is required.'}, status=status.HTTP_400_BAD_REQUEST)
-
         if not deck.founder_questions:
             return Response({'error': 'No founder questions available.'}, status=status.HTTP_400_BAD_REQUEST)
 
+        # Support sending only selected questions (list of indices)
+        selected_indices = request.data.get('selected_indices', None)
+        if selected_indices is not None:
+            questions = [deck.founder_questions[i] for i in selected_indices if 0 <= i < len(deck.founder_questions)]
+        else:
+            questions = deck.founder_questions
+            selected_indices = list(range(len(deck.founder_questions)))
+
+        if not questions:
+            return Response({'error': 'No questions selected.'}, status=status.HTTP_400_BAD_REQUEST)
+
         try:
-            send_founder_questions(recipient, deck.startup_name, deck.founder_questions)
+            send_founder_questions(recipient, deck.startup_name, questions)
         except Exception as e:
             return Response({'error': f'Email failed: {e}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        return Response({'message': 'Email sent successfully.'})
+        # Merge newly emailed indices into emailed_questions
+        emailed = set(deck.emailed_questions or [])
+        emailed.update(selected_indices)
+        deck.emailed_questions = sorted(emailed)
+        deck.save(update_fields=['emailed_questions'])
+
+        return Response({'message': 'Email sent successfully.', 'emailed_questions': deck.emailed_questions})
 
 
-class CommentListView(APIView):
-    def get(self, request, pk):
-        """List all comments for a deck."""
+class FounderContactView(APIView):
+    def patch(self, request, pk):
+        """Update founder name, email, and LinkedIn for a deck."""
         try:
             deck = Deck.objects.get(id=pk)
         except Deck.DoesNotExist:
             return Response({'error': 'Deck not found.'}, status=status.HTTP_404_NOT_FOUND)
-        comments = deck.comments.all()
-        return Response(CommentSerializer(comments, many=True).data)
+        serializer = FounderContactSerializer(deck, data=request.data, partial=True)
+        if not serializer.is_valid():
+            return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        serializer.save()
+        return Response(serializer.data)
+
+
+class CommentListView(APIView):
+    def get(self, request, pk):
+        try:
+            deck = Deck.objects.get(id=pk)
+        except Deck.DoesNotExist:
+            return Response({'error': 'Deck not found.'}, status=status.HTTP_404_NOT_FOUND)
+        return Response(CommentSerializer(deck.comments.all(), many=True).data)
 
     def post(self, request, pk):
-        """Add a new comment to a deck."""
         try:
             deck = Deck.objects.get(id=pk)
         except Deck.DoesNotExist:
@@ -159,7 +220,6 @@ class CommentListView(APIView):
 
 class CommentDeleteView(APIView):
     def delete(self, request, pk, comment_id):
-        """Delete a comment — only the author can delete their own comment."""
         try:
             comment = Comment.objects.get(id=comment_id, deck_id=pk)
         except Comment.DoesNotExist:

@@ -1,5 +1,4 @@
-# Deck model: stores pitch deck metadata, Cloudinary PDF URL, OpenAI reference, and all 4 AI-generated analysis fields.
-# Comment model: stores user notes attached to a deck.
+# Deck and Comment models. Deck includes sector, crm_status, founder contact info, and emailed question tracking.
 
 import uuid
 from django.db import models
@@ -7,23 +6,34 @@ from django.contrib.auth.models import User
 
 
 class Deck(models.Model):
-    STATUS_CHOICES = [
+    ANALYSIS_STATUS = [
         ('uploaded', 'Uploaded'),
         ('processing', 'Processing'),
         ('complete', 'Complete'),
         ('failed', 'Failed'),
     ]
+    CRM_STATUS = [
+        ('pending', 'Pending'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
+    ]
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     startup_name = models.CharField(max_length=255)
+    sector = models.CharField(max_length=255, blank=True)
     original_filename = models.CharField(max_length=255)
     pdf_url = models.URLField(max_length=500, blank=True)
     openai_file_id = models.CharField(max_length=255, blank=True)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='uploaded')
+    status = models.CharField(max_length=20, choices=ANALYSIS_STATUS, default='uploaded')
+    crm_status = models.CharField(max_length=20, choices=CRM_STATUS, default='pending')
+    # Founder contact
+    founder_email = models.EmailField(blank=True)
+    # Analysis fields
     business_model = models.TextField(blank=True)
     industry_context = models.TextField(blank=True)
     key_risks = models.JSONField(default=list)
     founder_questions = models.JSONField(default=list)
+    emailed_questions = models.JSONField(default=list)  # indices of questions already emailed
     error_message = models.TextField(blank=True)
     uploaded_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
