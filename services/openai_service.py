@@ -43,15 +43,15 @@ USER_PROMPT = """Analyze the attached pitch deck and return this exact JSON stru
   ],
 
   "founder_questions": [
-    "Question 1 — reference something specific from the deck",
-    "Question 2...",
-    "...up to 10 questions, ordered by investment priority"
+    {"question": "Question 1 — reference something specific from the deck", "answer": ""},
+    {"question": "Question 2...", "answer": ""},
+    {"question": "...up to 10 questions, ordered by investment priority", "answer": ""}
   ]
 }
 
 Rules:
 - key_risks must have 4–5 items. Each must explain the mechanism and reference something specific in this deck.
-- founder_questions must have 7–10 items, ordered: legal/structural risks first, then business model assumptions, then growth.
+- founder_questions must have 7–10 items as objects with "question" and "answer" keys. answer must always be empty string "". Ordered: legal/structural risks first, then business model assumptions, then growth.
 - Do not invent information not present in the deck.
 - Do not score, grade, or rank the startup in any way.
 - Return only raw JSON. No markdown fences. No text before or after the JSON."""

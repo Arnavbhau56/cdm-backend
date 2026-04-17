@@ -37,7 +37,7 @@ class DeckDetailSerializer(serializers.ModelSerializer):
             'id', 'startup_name', 'sector', 'original_filename', 'status', 'crm_status',
             'founder_email',
             'business_model', 'industry_context', 'key_risks',
-            'founder_questions', 'emailed_questions', 'error_message', 'pdf_url', 'created_at',
+            'founder_questions', 'emailed_questions', 'call_notes', 'error_message', 'pdf_url', 'created_at',
         ]
 
 

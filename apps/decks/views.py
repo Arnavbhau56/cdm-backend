@@ -162,9 +162,13 @@ class DeckEmailView(APIView):
         # Support sending only selected questions (list of indices)
         selected_indices = request.data.get('selected_indices', None)
         if selected_indices is not None:
-            questions = [deck.founder_questions[i] for i in selected_indices if 0 <= i < len(deck.founder_questions)]
+            questions = [
+                deck.founder_questions[i]['question']
+                for i in selected_indices
+                if 0 <= i < len(deck.founder_questions)
+            ]
         else:
-            questions = deck.founder_questions
+            questions = [q['question'] for q in deck.founder_questions]
             selected_indices = list(range(len(deck.founder_questions)))
 
         if not questions:
@@ -182,6 +186,53 @@ class DeckEmailView(APIView):
         deck.save(update_fields=['emailed_questions'])
 
         return Response({'message': 'Email sent successfully.', 'emailed_questions': deck.emailed_questions})
+
+
+class CallNotesView(APIView):
+    SECTIONS = [
+        'overview', 'problem', 'solution', 'product_business_model',
+        'traction_metrics', 'founding_team', 'competition',
+        'roadmap_gtm', 'fundraise_history',
+    ]
+
+    def patch(self, request, pk):
+        """Save call notes. Accepts partial dict — only provided keys are updated."""
+        try:
+            deck = Deck.objects.get(id=pk)
+        except Deck.DoesNotExist:
+            return Response({'error': 'Deck not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        notes = request.data.get('call_notes', {})
+        if not isinstance(notes, dict):
+            return Response({'error': 'call_notes must be an object.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        current = deck.call_notes or {}
+        current.update({k: v for k, v in notes.items() if k in self.SECTIONS})
+        deck.call_notes = current
+        deck.save(update_fields=['call_notes'])
+        return Response({'call_notes': deck.call_notes})
+
+
+class QuestionsView(APIView):
+    def patch(self, request, pk):
+        """Replace the full founder_questions array. Each item: {question, answer}."""
+        try:
+            deck = Deck.objects.get(id=pk)
+        except Deck.DoesNotExist:
+            return Response({'error': 'Deck not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        questions = request.data.get('founder_questions')
+        if not isinstance(questions, list):
+            return Response({'error': 'founder_questions must be a list.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Normalise — ensure each item has question + answer keys
+        normalised = []
+        for item in questions:
+            if isinstance(item, dict):
+                normalised.append({'question': str(item.get('question', '')), 'answer': str(item.get('answer', ''))})
+        deck.founder_questions = normalised
+        deck.save(update_fields=['founder_questions'])
+        return Response({'founder_questions': deck.founder_questions})
 
 
 class FounderContactView(APIView):

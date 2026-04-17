@@ -14,8 +14,23 @@ class Deck(models.Model):
     ]
     CRM_STATUS = [
         ('pending', 'Pending'),
-        ('approved', 'Approved'),
-        ('rejected', 'Rejected'),
+        ('portfolio', 'Portfolio Company'),
+        ('active', 'Active'),
+        ('decision_needed', 'Decision To Be Taken'),
+        ('dm_call', 'DM Call Setup / TBD'),
+        ('deep_dive', 'Need To Deep Dive'),
+        ('update_requested', 'Update Requested / Founder Followed Up'),
+        ('intro_call_done', 'Introductory Call Done'),
+        ('wait_watch', 'Wait and Watch'),
+        ('tracking', 'Tracking'),
+        ('not_raising', 'Not Raising, Introductory Call Done'),
+        ('will_raise', 'Will Raise Soon'),
+        ('early_undecided', 'Early, Undecided'),
+        ('connected_tbd', 'Connected, Calls To Be Decided'),
+        ('unresponsive', 'Founder Unresponsive'),
+        ('not_fit', 'Not a Fit'),
+        ('evaluated_pass', 'Evaluated, Pass'),
+        ('pass', 'Pass'),
     ]
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -32,8 +47,9 @@ class Deck(models.Model):
     business_model = models.TextField(blank=True)
     industry_context = models.TextField(blank=True)
     key_risks = models.JSONField(default=list)
-    founder_questions = models.JSONField(default=list)
+    founder_questions = models.JSONField(default=list)  # list of {question: str, answer: str}
     emailed_questions = models.JSONField(default=list)  # indices of questions already emailed
+    call_notes = models.JSONField(default=dict)  # {overview, problem, solution, ...}
     error_message = models.TextField(blank=True)
     uploaded_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
