@@ -1,0 +1,427 @@
+Sunil Meena <sunil@ecell.in>
+
+Wed, Apr 15 at 8:35 PM
+
+Fwd: Sandowitch - Internal
+
+Vidhi Jain <vidhi@cdmcapital.in>
+To: <sunil@ecell.in>
+
+Vidhi Jain
+CDM Capital
+9830399021
+vidhi@cdmcapital.in
+
+---------- Forwarded message ---------
+From: Aditya Narendra <aditya@cdmcapital.in>
+Date: Wed, 15 Apr 2026 at 6:49 PM
+Subject: Sandowitch - Internal
+To: Vidhi Jain <vidhi@cdmcapital.in>
+
+1. Call Notes
+
+Overview
+
+Sandowitch is a sandwich-focused QSR brand being built as a single-category, value-led, grab-and-go format with
+a tightly controlled menu and centralized production model. The core thesis is that sandwiches are a large but
+under-branded category in India: they cut across breakfast, snack, and meal occasions, are culturally familiar, and
+have room for a more scaled brand between low-priced local players and premium gourmet offerings. The business
+is currently live in Bangalore with one cloud kitchen and one retail store, after spending 6 months testing delivery
+and product travel from the central kitchen before opening the first store in November. The model is built around a
+central kitchen plus spoke stores with no live cooking at the store level beyond assembly, which keeps store
+complexity low and supports future franchising. Sandowitch is currently raising a pre-seed round to fund store
+rollout, with founder Vivek Prabhakar bringing deep consumer brand-building experience from Chumbak and prior
+brand / retail experience of over 30 years.
+
+Problem
+
+Sandwiches are a widely consumed category in India, but no scaled national sandwich-first brand has
+been built yet.
+The current market is split between:
+
+low-priced local/unorganized sandwich stores
+Subway-like formats at higher price points
+gourmet sandwich players priced at ₹500–600+
+
+The founder sees whitespace in the ₹180–250 accessible value band.
+Existing QSR formats often hit limits because they are tied to a narrow occasion:
+
+dessert-led brands
+snack-led brands
+beverage-led formats
+
+The founder's belief is that sandwiches are stronger because they work across occasions:
+
+breakfast
+
+snack
+lunch
+dinner
+
+Another implicit problem being solved is operational complexity:
+
+Many QSRs need live cooking, broad menus, and highly skilled staff
+Sandowitch wants a simpler, assembly-led store format
+
+Solution / Product
+
+Sandwich-first QSR brand with sandwiches as the core menu.
+Menu mix:
+
+70% sandwiches
+30% drinks, sides, desserts
+
+Current sandwich menu:
+2 egg
+6 veg
+6 non-veg
+
+The founder has a broader playbook of 34 additional sandwiches, but does not plan to increase SKU count
+materially; the menu is intended to stay tight.
+Product positioning is a mix of:
+
+Indianized flavors
+select global flavor profiles
+
+Key product/supply differentiators:
+bread made fully in-house
+sauces, dips, and fillings made in-house
+packaging designed for travel
+bread engineered to avoid getting soggy
+
+Product is designed for:
+dine-in
+grab-and-go
+delivery
+
+Store-level process is mostly assembly:
+
+bread gets cut/toasted 
+Pre-portioned filling is heated. 
+sandwich is assembled and served
+
+No grilling / complex cooking at the store; only conveyor toasting and simple final assembly.
+
+Product & Business Model
+
+Format:
+
+600 sq ft QSR
+small dine-in for 8–10 people
+delivery + dine-in
+
+Operating model:
+
+central kitchen + spoke stores
+daily milk run from the central kitchen to stores
+No major live cooking at the store level
+
+Current central kitchen:
+
+3,000 sq ft
+can support 10 stores today
+
+The founder expects one central kitchen to support roughly 10–15 stores, depending on city density.
+Shelf life:
+
+Most items have a ~5–7-day shelf life
+stores carry ~48 hours of inventory
+
+Store staffing:
+
+3 kitchen / assembly staff + 1 front-of-house per shift structure across two shifts
+effectively simple assembly-led operations
+
+Revenue model:
+
+dine-in / takeaway
+online delivery
+future franchise/master franchise structure
+future FMCG retail for bread, dips, and sauces in 6–8 months
+
+Long-term structure:
+
+central kitchens company-owned
+stores can be franchised after the first 10–20 company-owned stores
+
+Traction & Metrics
+
+Business tested delivery from the central kitchen for 6 months before opening the first retail store in
+November.
+Current footprint:
+
+1 cloud kitchen
+1 retail store
+
+Near-term rollout:
+
+2nd store in ~2 weeks from call
+3rd store in April
+4th and 5th stores in May
+
+Geography:
+
+All current stores in Bangalore
+
+Current AOV:
+
+₹425
+Current monthly orders:
+
+cloud kitchen: 2,500
+retail: 5,000+
+
+Mix at store:
+
+65% offline
+35% online
+
+Three core sandwiches already contribute 30% of the business.
+Unit economics shared:
+
+Food COGS: 27–28%
+packaging: 2–3%
+total COGS incl. packaging: 30%
+gross margin: 70%
+
+Store costs:
+
+rent: ₹2.1L
+people: ₹2L
+utilities: ₹35–40K
+
+Capex:
+
+₹26L per store
+₹38L per central kitchen
+
+Store break-even:
+
+₹8.5L monthly revenue
+
+Current monthly revenue per store:
+
+₹21–22L
+
+Store profitability: The founder says stores are profitable from day one
+Store payback:
+
+13–14 months at scale
+
+Company burn:
+
+₹4–4.5L per month
+
+Online platform commission:
+
+28%+ to Swiggy / Zomato
+
+Founding Team
+
+Vivek Prabhakar — Founder
+
+30 years in brand, retail, and consumer
+experience across precious metals, jewellery, watches, tech, and consumer brands
+founded and built Chumbak over 15 years
+Exited operating role about a year ago, still a shareholder
+brings strong consumer brand-building and retail scale experience
+
+Supporting team:
+
+3 operating team members across:
+
+brand
+kitchen ops
+retail ops
+
+Product development support:
+works with 2–3 chefs
+separate chefs contribute across sandwiches, sides/desserts, and drinks
+
+Business today is strongly founder-led.
+
+Competition
+
+Direct competition appears fragmented rather than organized.
+Competitor buckets:
+
+local sandwich chains / city-specific leaders
+Subway
+gourmet sandwich players
+adjacent QSR chains in burgers/snacks/cafes
+
+Founder's view:
+
+local chains can scale to 10–12 stores in one city, but remain local and less brand-led
+Subway is the closest scaled sandwich-adjacent benchmark, though product and price point
+differ
+Gourmet sandwich brands operate at much higher price points
+
+Not seen as direct competition:
+
+single-store / one-off sandwich cafés
+“Sando Club”-type small players, per the founder
+
+Core differentiation claimed:
+
+sandwich-first brand focus
+tighter value positioning
+in-house bread/sauces/fillings
+low-complexity store model
+ability to scale through central kitchen + franchise-ready format
+
+Roadmap / GTM / Expansion
+
+Immediate rollout plan in Bangalore:
+
+Indiranagar
+Whitefield
+Koramangala
+Jayanagar
+
+other mapped clusters
+
+The founder believes Bangalore can support 40 stores over time.
+After Bangalore, the next cities planned:
+
+Hyderabad
+Chennai
+
+Reason for South-first expansion:
+simpler logistics
+
+Growth model:
+
+First 10–20 stores company-owned
+Post that, city-level master franchisees may be added
+Central kitchens remain company-owned / operated
+
+Near-term use of funds is primarily store deployment, not heavy HQ buildout.
+Planned hires:
+
+senior kitchen ops
+senior retail ops
+
+Additional roadmap:
+
+FMCG retail launch for bread/dips/sauces in 6–8 months
+
+The founder is explicitly resisting menu creep:
+
+does not want to add adjacent categories to drive growth
+wants sandwiches to remain the core identity
+
+Fundraise History & Current Raise
+
+Raised US$500K from friends and family.
+Current raise:
+
+pre-seed round of US$1M
+and additional US$100K–150K debt
+
+Use of funds:
+
+primarily new store deployment
+limited senior hires in kitchen ops / retail ops
+
+Target valuation range discussed
+
+₹50–65 Cr
+
+Stage of conversations:
+
+One offer for the full round
+another structure with US$550K + US$600K from two investors
+founder said 3 term-sheet-level conversations and more are expected soon
+
+2. Pitch Deck Attached
+
+3.  Internal Notes
+
+Sando
+
+Burgers have McDonald's. Pizza has Domino's. Biryani has multiple scaled plays. But sandwiches, the world's
+
+most ever-present convenience meal, remain a white space in branded Indian QSR. 
+
+Subway exists, but operates an old playbook with cold subs, a franchise-heavy model, and no real cultural
+
+resonance with Indian. Sandowitch is India's first flavour-forward, personality-packed sandwich QSR — Indian in
+
+soul, global in format, built for the next decade of urban consumption.
+
+Sector Tailwinds
+
+1. White space 
+
+No Indian-born, scaled sandwich QSR exists. Subway is the only credible player — and it's a foreign brand with a
+
+format that hasn't evolved for India. This is Domino's opportunity for sandwiches. 
+
+2. Haldiram's is in advanced talks to bring Jimmy John's (2,600 US outlets, $2.6B system sales) to India to compete
+
+with Subway. Smart money is recognising this category.  (https://timesofindia.indiatimes.com/business/india-
+
+business/jimmy-john-in-india-haldiram-in-talks-with-inspire-brands-aims-to-compete-with-subway-tim-
+
+hortons/articleshow/125212534.cms)
+
+3. Comparable: A sandwizza won't be the right comparable, but Subway India COCO 389crs revenue (433 stores),
+
+store EBITDA: 14.8%, and Sandowitch at ₹2.5 Cr ARR in month 3.
+
+4. Central Kitchen → 10–12 QSR outlets model mirrors the playbook of Wow! Momo and Biggie's Burger —
+
+India's most successfully scaled homegrown QSR formats. Capex at ₹70–75L/store is lean and franchise-ready. 
+
+5. Vibrant diner-aesthetic store design, Instagrammable food, sub-₹200 entry point, and a personality-first identity.
+
+63% dine-in orders signal real destination pull — not just delivery dependency. 
+
+6. India's QSR market hits $43.5B by 2030. Cloud kitchens and QSRs will grow 40% faster than overall F&B. Tier
+
+1 cities are already saturated for burgers/pizza — sandwiches could be next
+
+USP / MOAT / Defensibility 
+
+1. In-house formulation
+
+All bread is baked in-house at the Central Kitchen, and sauces and recipes are also in-house. This is the single
+
+biggest quality differentiator vs. Subway's frozen bun supply chain — and creates a defensible taste moat with a
+
+possible FMCG play in the roadmap in the future. 
+
+2. Hot & Toasty Format
+
+Indians prefer hot food. Sandowitch's toasty sandwich format aligns with Indian eating habits — unlike Subway's
+
+cold-sub model, which requires consumer behaviour change.
+
+3. Menu Discipline
+
+Lean, tight menu: 14 sandwiches, sides, salads, desserts, drinks. Top 3 sandwiches = 40% of sales — a clear signal
+
+of operational focus and repeat purchase patterns.
+
+4. Pricing
+
+Entry at ₹149. Core sandwiches at ₹179–₹249. Full meal under ₹400. This is the sweet spot for India's urban
+
+working class and students — the highest frequency QSR cohort.
+
+5. Diner Aesthetic / Instagrammable
+
+American-Japanese diner inspiration, vibrant murals, bold brand identity. The store is a social media asset —
+
+driving organic discovery at zero CAC.
+
+6. Central Kitchen Infrastructure
+
+One CK serves 10–12 outlets + 1 cloud kitchen. This mirrors Wow! Momo's exact scale model — keeping quality
+
+consistent while keeping costs low across expansion.
+
+Sandowitched.pdf
+
+

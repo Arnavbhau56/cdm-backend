@@ -62,6 +62,22 @@ class Deck(models.Model):
         return self.startup_name
 
 
+class DeckMaterial(models.Model):
+    """Any additional file uploaded against a deck (pitch notes, financials, etc.)."""
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    deck = models.ForeignKey(Deck, on_delete=models.CASCADE, related_name='materials')
+    name = models.CharField(max_length=255)
+    url = models.URLField(max_length=500)
+    uploaded_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f'{self.name} — {self.deck}'
+
+
 class Comment(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     deck = models.ForeignKey(Deck, on_delete=models.CASCADE, related_name='comments')

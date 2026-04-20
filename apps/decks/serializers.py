@@ -1,7 +1,7 @@
 # Serializers for Deck (list + detail), founder contact update, and Comment models.
 
 from rest_framework import serializers
-from .models import Deck, Comment
+from .models import Deck, Comment, DeckMaterial
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -45,3 +45,9 @@ class FounderContactSerializer(serializers.ModelSerializer):
     class Meta:
         model = Deck
         fields = ['founder_email']
+
+
+class DeckMaterialSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DeckMaterial
+        fields = ['id', 'name', 'url', 'created_at']

@@ -4,7 +4,8 @@ from django.urls import path
 from .views import (
     DeckListView, DeckUploadView, DeckDetailView, DeckBulkDeleteView,
     DeckEmailView, DeckCrmStatusView, FounderContactView, QuestionsView,
-    CallNotesView, CommentListView, CommentDeleteView,
+    CallNotesView, DeckMaterialView, DeckMaterialDeleteView,
+    CommentListView, CommentDeleteView, AutoAnswerView,
 )
 
 urlpatterns = [
@@ -17,6 +18,9 @@ urlpatterns = [
     path('<uuid:pk>/founder/', FounderContactView.as_view(), name='deck-founder'),
     path('<uuid:pk>/questions/', QuestionsView.as_view(), name='deck-questions'),
     path('<uuid:pk>/call-notes/', CallNotesView.as_view(), name='deck-call-notes'),
+    path('<uuid:pk>/materials/', DeckMaterialView.as_view(), name='deck-materials'),
+    path('<uuid:pk>/materials/<uuid:material_id>/', DeckMaterialDeleteView.as_view(), name='deck-material-delete'),
     path('<uuid:pk>/comments/', CommentListView.as_view(), name='deck-comments'),
     path('<uuid:pk>/comments/<uuid:comment_id>/', CommentDeleteView.as_view(), name='deck-comment-delete'),
+    path('<uuid:pk>/auto-answer/', AutoAnswerView.as_view(), name='deck-auto-answer'),
 ]
