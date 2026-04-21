@@ -1,5 +1,5 @@
 # OpenAI service: uploads PDF to Files API, calls gpt-4o with structured VC analysis prompt,
-# returns parsed JSON with startup_name, sector, business_model, industry_context, key_risks, founder_questions.
+# returns parsed JSON with startup_name, sector, founder_email, business_model, industry_context, key_risks, founder_questions.
 
 import json
 import os
@@ -15,9 +15,21 @@ Firm context:
 - Our question style: {question_style}
 - Additional context: {additional_context}
 
-A startup pitch deck has been attached as a file. Your job is NOT to summarize the deck.
-Your job is to help our investment team deeply understand this business and walk into
-the first founder call fully prepared — even if they have never seen this sector before.
+A startup pitch deck has been attached as a file.
+
+Your task is NOT to summarize slides superficially. Your task is to think like an investor preparing for a first founder meeting and produce deep, commercially useful analysis.
+
+You must reason carefully about:
+- What the company is actually selling vs how it is marketed.
+- Whether the problem is painful enough to create real demand.
+- How the product compares with existing incumbents, startups, in-house solutions, and substitutes.
+- Whether the claimed differentiation is structural, temporary, or weak.
+- How this market typically behaves and what determines winners.
+- What assumptions must be true for this company to become venture-scale.
+- Hidden risks, missing information, inconsistencies, or overclaims in the deck.
+- What sophisticated investors would immediately want clarified.
+
+Do not accept deck claims at face value. Infer thoughtfully from what is shown and what is omitted.
 
 Return ONLY a valid JSON object with exactly these 7 keys. No markdown. No explanation outside the JSON."""
 
@@ -30,12 +42,12 @@ USER_PROMPT = """Analyze the attached pitch deck and return this exact JSON stru
 
   "founder_email": "Email address of the founder or company contact if present in the deck. If not found, return empty string.",
 
-  "business_model": "A clear, jargon-free explanation of what this company does, who their customer is, how they make money, and why a customer would choose them over alternatives. Write as if explaining to a smart generalist who knows nothing about this sector.",
+  "business_model": "Write a sharp investor-grade explanation of what the company does, who pays them, how revenue is generated, what customer workflow they fit into, why customers would switch from current alternatives, and what must happen for revenue to scale materially. Avoid generic wording.",
 
-  "industry_context": "Explain how this type of business typically works — the category dynamics, what drives success in it, how companies in this space typically grow, and any relevant VC-backed precedents or comparable companies.",
+  "industry_context": "Provide a deep explanation of how this category usually works. Include buying behavior, sales cycles, margins, competition structure, switching costs, regulatory or operational constraints, common failure modes, growth levers, and notable comparable companies or venture-backed precedents where relevant. Explain what separates winners from average players.",
 
   "key_risks": [
-    "Risk 1 — explain the exact mechanism of why this is a risk. Reference specific data or gaps from the deck.",
+    "Risk 1 — Explain the precise mechanism of risk. Reference specific claims, omissions, metrics, GTM assumptions, competition, unit economics, legal structure, founder dependency, or unclear evidence from the deck.",
     "Risk 2...",
     "Risk 3...",
     "Risk 4...",
@@ -43,17 +55,32 @@ USER_PROMPT = """Analyze the attached pitch deck and return this exact JSON stru
   ],
 
   "founder_questions": [
-    {"question": "Question 1 — reference something specific from the deck", "answer": ""},
-    {"question": "Question 2...", "answer": ""},
-    {"question": "...up to 10 questions, ordered by investment priority", "answer": ""}
+    {"question": "Question 1 — highest priority legal / structural / ownership / compliance issue based on the deck", "answer": ""},
+    {"question": "Question 2 — challenge a core business model assumption using something specific in the deck", "answer": ""},
+    {"question": "Question 3 — ask about product differentiation vs current alternatives or competitors", "answer": ""},
+    {"question": "Question 4 — ask about traction quality, retention, cohort, or revenue proof", "answer": ""},
+    {"question": "Question 5 — ask about GTM efficiency or customer acquisition model", "answer": ""},
+    {"question": "Question 6 — ask about scalability or operational bottlenecks", "answer": ""},
+    {"question": "Question 7 — ask about why now / market timing", "answer": ""},
+    {"question": "Question 8 — ask about fundraising use of funds or milestones", "answer": ""},
+    {"question": "Question 9 — ask about next critical execution risk", "answer": ""},
+    {"question": "Question 10 — any sharp investor diligence question triggered by the deck", "answer": ""}
   ]
 }
 
 Rules:
-- key_risks must have 4–5 items. Each must explain the mechanism and reference something specific in this deck.
-- founder_questions must have 7–10 items as objects with "question" and "answer" keys. answer must always be empty string "". Ordered: legal/structural risks first, then business model assumptions, then growth.
-- Do not invent information not present in the deck.
-- Do not score, grade, or rank the startup in any way.
+- Think deeply before answering. Prefer insight over repetition.
+- Use evidence from the deck wherever possible.
+- If the deck makes claims, test them logically instead of repeating them.
+- Compare the startup implicitly or explicitly against likely alternatives already in the market.
+- Identify what is missing, not only what is present.
+- business_model and industry_context must be specific, nuanced, and useful to an investor unfamiliar with the sector.
+- key_risks must contain 4–5 items only. Each should be concrete, non-generic, and tied to this deck.
+- founder_questions must contain 7–10 items only, each as {"question":"","answer":""}.
+- Order founder_questions by investment priority: legal/structure first, then business model truth-testing, then traction, then growth.
+- Questions must be sharp, specific, and reference something concrete from the deck. They should probe assumptions, not ask for generic information.
+- Do not invent facts not supported by the deck. Where uncertain, state the uncertainty.
+- No scoring, no hype, no compliments.
 - Return only raw JSON. No markdown fences. No text before or after the JSON."""
 
 
