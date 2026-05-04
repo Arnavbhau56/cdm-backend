@@ -11,7 +11,6 @@ from rest_framework.parsers import MultiPartParser
 
 from apps.decks.models import Deck
 from apps.decks.serializers import DeckDetailSerializer
-from apps.setup.models import FirmPreferences
 from services.conversion_service import convert_to_pdf
 from services.storage_service import upload_to_cloudinary
 from services.openai_service import analyze_deck
@@ -21,13 +20,15 @@ def _run_analysis(deck_id: str, pdf_path: str):
     """Background thread: runs OpenAI analysis, uploads to Cloudinary, saves results."""
     deck = Deck.objects.get(id=deck_id)
     try:
-        prefs = FirmPreferences.objects.first()
-        result = analyze_deck(pdf_path, prefs)
+        result = analyze_deck(pdf_path)
         pdf_url = upload_to_cloudinary(pdf_path, f'decks/{deck_id}')
 
         deck.pdf_url = pdf_url
         deck.startup_name = result.get('startup_name') or deck.startup_name
+        deck.registered_name = result.get('registered_name', '')
         deck.sector = result.get('sector', '')
+        deck.sub_sector = result.get('sub_sector', '')
+        deck.one_liner = result.get('one_liner', '')
         deck.founder_email = result.get('founder_email', '')
         deck.business_model = result['business_model']
         deck.industry_context = result['industry_context']

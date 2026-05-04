@@ -5,7 +5,8 @@ from .views import (
     DeckListView, DeckUploadView, DeckDetailView, DeckBulkDeleteView,
     DeckEmailView, DeckCrmStatusView, FounderContactView, QuestionsView,
     CallNotesView, DeckMaterialView, DeckMaterialDeleteView,
-    CommentListView, CommentDeleteView, AutoAnswerView,
+    CommentListView, CommentDeleteView, AutoAnswerView, SuggestQuestionsView,
+    DeckNoteView, DeckNoteDeleteView, DealInsightView,
 )
 
 urlpatterns = [
@@ -20,7 +21,11 @@ urlpatterns = [
     path('<uuid:pk>/call-notes/', CallNotesView.as_view(), name='deck-call-notes'),
     path('<uuid:pk>/materials/', DeckMaterialView.as_view(), name='deck-materials'),
     path('<uuid:pk>/materials/<uuid:material_id>/', DeckMaterialDeleteView.as_view(), name='deck-material-delete'),
+    path('<uuid:pk>/notes/', DeckNoteView.as_view(), name='deck-notes'),
+    path('<uuid:pk>/notes/<uuid:note_id>/', DeckNoteDeleteView.as_view(), name='deck-note-delete'),
     path('<uuid:pk>/comments/', CommentListView.as_view(), name='deck-comments'),
     path('<uuid:pk>/comments/<uuid:comment_id>/', CommentDeleteView.as_view(), name='deck-comment-delete'),
     path('<uuid:pk>/auto-answer/', AutoAnswerView.as_view(), name='deck-auto-answer'),
+    path('<uuid:pk>/suggest-questions/', SuggestQuestionsView.as_view(), name='deck-suggest-questions'),
+    path('<uuid:pk>/insight/', DealInsightView.as_view(), name='deck-insight'),
 ]

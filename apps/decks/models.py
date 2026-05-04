@@ -44,8 +44,11 @@ class Deck(models.Model):
     # Founder contact
     founder_email = models.EmailField(blank=True)
     # Analysis fields
+    registered_name = models.CharField(max_length=255, blank=True)
+    sub_sector = models.CharField(max_length=255, blank=True)
+    one_liner = models.CharField(max_length=500, blank=True)
     business_model = models.TextField(blank=True)
-    industry_context = models.TextField(blank=True)
+    industry_context = models.JSONField(default=dict)
     key_risks = models.JSONField(default=list)
     founder_questions = models.JSONField(default=list)  # list of {question: str, answer: str}
     emailed_questions = models.JSONField(default=list)  # indices of questions already emailed
@@ -76,6 +79,29 @@ class DeckMaterial(models.Model):
 
     def __str__(self):
         return f'{self.name} — {self.deck}'
+
+
+class DeckNote(models.Model):
+    """Free-text notes against a deck: general, MIS/financials, WhatsApp chat, or call note."""
+    KIND_CHOICES = [
+        ('general', 'General Note'),
+        ('mis', 'MIS / Financials'),
+        ('whatsapp', 'WhatsApp / Chat'),
+        ('call', 'Call Note'),
+    ]
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    deck = models.ForeignKey(Deck, on_delete=models.CASCADE, related_name='notes')
+    kind = models.CharField(max_length=20, choices=KIND_CHOICES, default='general')
+    title = models.CharField(max_length=255, blank=True)
+    body = models.TextField()
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f'[{self.kind}] {self.title or self.body[:40]} — {self.deck}'
 
 
 class Comment(models.Model):

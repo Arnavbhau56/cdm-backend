@@ -1,7 +1,9 @@
 # Materials views: upload, list, and delete additional files (financials, term sheets, etc.) per deck.
+# After each upload, auto-answer is re-run in the background to update founder question answers.
 
 import os
 import tempfile
+import threading
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -11,6 +13,17 @@ from rest_framework.parsers import MultiPartParser
 from apps.decks.models import Deck, DeckMaterial
 from apps.decks.serializers import DeckMaterialSerializer
 from services.storage_service import upload_to_cloudinary
+
+
+def _trigger_auto_answer(deck_id: str):
+    """Background thread: re-runs auto-answer after a new material is uploaded."""
+    try:
+        from apps.decks.views.auto_answer import run_auto_answer
+        deck = Deck.objects.get(id=deck_id)
+        if deck.founder_questions and deck.status == 'complete':
+            run_auto_answer(deck)
+    except Exception:
+        pass
 
 
 class DeckMaterialView(APIView):
@@ -50,6 +63,10 @@ class DeckMaterialView(APIView):
         material = DeckMaterial.objects.create(
             deck=deck, name=file.name, url=url, uploaded_by=request.user
         )
+
+        # Re-run auto-answer in background so new material context is reflected
+        threading.Thread(target=_trigger_auto_answer, args=(str(pk),), daemon=True).start()
+
         return Response(DeckMaterialSerializer(material).data, status=status.HTTP_201_CREATED)
 
 

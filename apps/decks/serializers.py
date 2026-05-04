@@ -31,14 +31,21 @@ class DeckListSerializer(serializers.ModelSerializer):
 
 
 class DeckDetailSerializer(serializers.ModelSerializer):
+    materials = serializers.SerializerMethodField()
+
     class Meta:
         model = Deck
         fields = [
-            'id', 'startup_name', 'sector', 'original_filename', 'status', 'crm_status',
+            'id', 'startup_name', 'registered_name', 'sector', 'sub_sector', 'one_liner',
+            'original_filename', 'status', 'crm_status',
             'founder_email',
             'business_model', 'industry_context', 'key_risks',
             'founder_questions', 'emailed_questions', 'call_notes', 'error_message', 'pdf_url', 'created_at',
+            'materials',
         ]
+
+    def get_materials(self, obj):
+        return [{'id': str(m.id), 'name': m.name, 'url': m.url, 'created_at': m.created_at.isoformat()} for m in obj.materials.all()]
 
 
 class FounderContactSerializer(serializers.ModelSerializer):
