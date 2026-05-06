@@ -41,10 +41,13 @@ class Deck(models.Model):
     openai_file_id = models.CharField(max_length=255, blank=True)
     status = models.CharField(max_length=20, choices=ANALYSIS_STATUS, default='uploaded')
     crm_status = models.CharField(max_length=20, choices=CRM_STATUS, default='pending')
-    # Founder contact
-    founder_email = models.EmailField(blank=True)
+    # Founder contact — 3 separate fields
+    founder_email_1 = models.CharField(max_length=255, blank=True)
+    founder_email_2 = models.CharField(max_length=255, blank=True)
+    founder_email_3 = models.CharField(max_length=255, blank=True)
     # Analysis fields
     registered_name = models.CharField(max_length=255, blank=True)
+    website = models.CharField(max_length=500, blank=True)
     sub_sector = models.CharField(max_length=255, blank=True)
     one_liner = models.CharField(max_length=500, blank=True)
     business_model = models.TextField(blank=True)
@@ -53,6 +56,8 @@ class Deck(models.Model):
     founder_questions = models.JSONField(default=list)  # list of {question: str, answer: str}
     emailed_questions = models.JSONField(default=list)  # indices of questions already emailed
     call_notes = models.JSONField(default=dict)  # {overview, problem, solution, ...}
+    call_notes_updated_at = models.DateTimeField(null=True, blank=True)
+    insight = models.JSONField(default=dict)  # cached DealInsight output
     error_message = models.TextField(blank=True)
     uploaded_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(auto_now_add=True)

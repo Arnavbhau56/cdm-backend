@@ -21,7 +21,11 @@ class QuestionsView(APIView):
             return Response({'error': 'founder_questions must be a list.'}, status=status.HTTP_400_BAD_REQUEST)
 
         normalised = [
-            {'question': str(item.get('question', '')), 'answer': str(item.get('answer', ''))}
+            {k: v for k, v in {
+                'question': str(item.get('question', '')),
+                'answer': str(item.get('answer', '')),
+                'sector': item.get('sector', ''),
+            }.items()}
             for item in questions if isinstance(item, dict)
         ]
         deck.founder_questions = normalised

@@ -6,7 +6,7 @@ from .views import (
     DeckEmailView, DeckCrmStatusView, FounderContactView, QuestionsView,
     CallNotesView, DeckMaterialView, DeckMaterialDeleteView,
     CommentListView, CommentDeleteView, AutoAnswerView, SuggestQuestionsView,
-    DeckNoteView, DeckNoteDeleteView, DealInsightView,
+    DeckNoteView, DeckNoteDeleteView, DealInsightView, CustomEmailView,
 )
 
 urlpatterns = [
@@ -28,4 +28,5 @@ urlpatterns = [
     path('<uuid:pk>/auto-answer/', AutoAnswerView.as_view(), name='deck-auto-answer'),
     path('<uuid:pk>/suggest-questions/', SuggestQuestionsView.as_view(), name='deck-suggest-questions'),
     path('<uuid:pk>/insight/', DealInsightView.as_view(), name='deck-insight'),
+    path('<uuid:pk>/custom-email/', CustomEmailView.as_view(), name='deck-custom-email'),
 ]

@@ -26,9 +26,9 @@ class CommentInline(admin.TabularInline):
 @admin.register(Deck)
 class DeckAdmin(ImportExportModelAdmin):
     resource_class = DeckResource
-    list_display = ['startup_name', 'sector', 'founder_email', 'status', 'crm_status', 'uploaded_by', 'created_at']
+    list_display = ['startup_name', 'sector', 'founder_email_1', 'status', 'crm_status', 'uploaded_by', 'created_at']
     list_filter = ['crm_status', 'status', 'sector']
-    search_fields = ['startup_name', 'sector', 'founder_email']
+    search_fields = ['startup_name', 'sector', 'founder_email_1', 'founder_email_2', 'founder_email_3']
     readonly_fields = ['id', 'openai_file_id', 'pdf_url', 'created_at', 'updated_at']
     list_editable = ['crm_status']
     inlines = [CommentInline]

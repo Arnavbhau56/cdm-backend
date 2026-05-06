@@ -10,3 +10,4 @@ from .notes import DeckNoteView, DeckNoteDeleteView
 from .auto_answer import AutoAnswerView
 from .suggest_questions import SuggestQuestionsView
 from .insight import DealInsightView
+from .custom_email import CustomEmailView

@@ -1,5 +1,6 @@
 # CRM views: update pipeline status, update founder email, save call notes.
 
+from django.utils import timezone
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -58,5 +59,10 @@ class CallNotesView(APIView):
         current = deck.call_notes or {}
         current.update({k: v for k, v in notes.items() if k in CALL_NOTE_SECTIONS})
         deck.call_notes = current
-        deck.save(update_fields=['call_notes'])
-        return Response({'call_notes': deck.call_notes})
+        deck.call_notes_updated_at = timezone.now()
+        deck.save(update_fields=['call_notes', 'call_notes_updated_at'])
+        return Response({
+            'call_notes': deck.call_notes,
+            'call_notes_updated_at': deck.call_notes_updated_at,
+            'created_at': deck.created_at,
+        })

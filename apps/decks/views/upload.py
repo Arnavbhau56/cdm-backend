@@ -26,10 +26,13 @@ def _run_analysis(deck_id: str, pdf_path: str):
         deck.pdf_url = pdf_url
         deck.startup_name = result.get('startup_name') or deck.startup_name
         deck.registered_name = result.get('registered_name', '')
+        deck.website = result.get('website', '')
         deck.sector = result.get('sector', '')
         deck.sub_sector = result.get('sub_sector', '')
         deck.one_liner = result.get('one_liner', '')
-        deck.founder_email = result.get('founder_email', '')
+        deck.founder_email_1 = result.get('founder_email_1', '')
+        deck.founder_email_2 = result.get('founder_email_2', '')
+        deck.founder_email_3 = result.get('founder_email_3', '')
         deck.business_model = result['business_model']
         deck.industry_context = result['industry_context']
         deck.key_risks = result['key_risks']
