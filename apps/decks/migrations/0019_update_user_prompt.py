@@ -84,6 +84,7 @@ def update_user_prompt(apps, schema_editor):
 class Migration(migrations.Migration):
     dependencies = [
         ('decks', '0018_founder_email_split'),
+        ('setup', '0002_prompt'),
     ]
 
     operations = [
